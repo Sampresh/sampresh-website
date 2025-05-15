@@ -10,9 +10,9 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-  // This ensures assets work correctly with GitHub Pages
-  basePath: process.env.NODE_ENV === 'production' ? '' : '',
-  assetPrefix: process.env.NODE_ENV === 'production' ? '' : '',
+  // Fix for the startsWith error - ensure we're not using undefined paths
+  basePath: '',
+  assetPrefix: '',
   trailingSlash: true,
 }
 

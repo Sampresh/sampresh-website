@@ -29,10 +29,12 @@ jobs:
         run: npm ci
       - name: Build
         run: npm run build
+        env:
+          # Add NODE_ENV to ensure proper handling of paths
+          NODE_ENV: production
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-pages-artifact@v2
         with:
-          name: build-artifact
           path: ./out
 
   deploy:

@@ -25,7 +25,7 @@ export default function CVPage() {
     return (
       <div className="min-h-screen bg-black text-white flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-red-500 border-r-2 border-b-2 border-gray-800 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-red-500 border-r-2 border-b-2 mx-auto mb-4"></div>
           <p>Loading CV information...</p>
         </div>
       </div>
@@ -135,4 +135,39 @@ export default function CVPage() {
           <div className="text-center">
             <p className="text-gray-400 mb-4">Need more information or want to discuss a project?</p>
             <Link href="/contact" passHref>
-              <Button variant="outline" className="border-red-500 text-\
+              <Button variant="outline" className="border-red-500 text-red-500 hover:bg-red-500 hover:text-white">
+                Contact Me
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </main>
+
+      <footer className="bg-zinc-900 py-12 px-4">
+        <div className="container mx-auto">
+          <div className="flex flex-col md:flex-row justify-between items-center">
+            <div className="mb-6 md:mb-0">
+              <Link href="/" className="text-2xl font-bold text-white">
+                <span className="text-red-500">Sampresh</span>Karki
+              </Link>
+              <p className="text-gray-400 mt-2">Building the future, one line of code at a time.</p>
+            </div>
+            <div className="flex gap-4">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-white hover:text-red-500"
+                onClick={() => window.open("https://github.com/Sampresh", "_blank")}
+              >
+                <FileText className="h-5 w-5" />
+              </Button>
+            </div>
+          </div>
+          <div className="border-t border-zinc-800 mt-8 pt-8 text-center text-gray-400">
+            <p>© {new Date().getFullYear()} Sampresh Karki. All rights reserved.</p>
+          </div>
+        </div>
+      </footer>
+    </div>
+  )
+}
