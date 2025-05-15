@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://sampresh.com.np/sitemap.xml
