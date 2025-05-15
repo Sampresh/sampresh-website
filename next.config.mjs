@@ -10,8 +10,8 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-  // basePath: '/sampresh-website',
-  // assetPrefix: '/sampresh-website/',
+   basePath: '/sampresh-website',
+   assetPrefix: '/sampresh-website/',
   trailingSlash: true,
 };
 
