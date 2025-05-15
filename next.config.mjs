@@ -10,10 +10,9 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-  // Fix for the startsWith error - ensure we're not using undefined paths
-  basePath: '',
-  assetPrefix: '',
+  // basePath: '/sampresh-website',
+  // assetPrefix: '/sampresh-website/',
   trailingSlash: true,
-}
+};
 
-export default nextConfig
+export default nextConfig;
