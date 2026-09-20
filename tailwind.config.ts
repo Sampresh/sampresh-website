@@ -19,6 +19,15 @@ const config = {
       },
     },
     extend: {
+      fontFamily: {
+        sans: ["var(--font-geist-sans)", "ui-sans-serif", "system-ui", "sans-serif"],
+        mono: ["var(--font-geist-mono)", "ui-monospace", "monospace"],
+        "pixel-square": ["var(--font-geist-pixel-square)", "ui-monospace", "monospace"],
+        "pixel-grid": ["var(--font-geist-pixel-grid)", "ui-monospace", "monospace"],
+        "pixel-circle": ["var(--font-geist-pixel-circle)", "ui-monospace", "monospace"],
+        "pixel-triangle": ["var(--font-geist-pixel-triangle)", "ui-monospace", "monospace"],
+        "pixel-line": ["var(--font-geist-pixel-line)", "ui-monospace", "monospace"],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

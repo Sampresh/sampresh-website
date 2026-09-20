@@ -44,11 +44,21 @@ export default function ProjectsPage() {
         <h1 className="text-4xl font-bold mb-8">My Projects</h1>
 
         <Tabs defaultValue="all" className="w-full mb-12">
-          <TabsList className="bg-zinc-900 border border-zinc-800 p-1 overflow-x-auto flex-nowrap">
-            <TabsTrigger value="all">All Projects</TabsTrigger>
-            <TabsTrigger value="web">Web Development</TabsTrigger>
-            <TabsTrigger value="mobile">Mobile Development</TabsTrigger>
-            <TabsTrigger value="ai">AI/ML</TabsTrigger>
+          {/* Stacked on phones so the long category names never overflow; a
+              single row from sm up, where there is width for it. */}
+          <TabsList className="flex h-auto w-full flex-col items-stretch gap-1.5 rounded-lg border border-zinc-800 bg-zinc-900 p-1.5 sm:inline-flex sm:h-10 sm:w-auto sm:flex-row sm:gap-1 sm:p-1">
+            <TabsTrigger value="all" className="w-full py-2.5 sm:w-auto sm:py-1.5">
+              All Projects
+            </TabsTrigger>
+            <TabsTrigger value="web" className="w-full py-2.5 sm:w-auto sm:py-1.5">
+              Web Development
+            </TabsTrigger>
+            <TabsTrigger value="mobile" className="w-full py-2.5 sm:w-auto sm:py-1.5">
+              Mobile Development
+            </TabsTrigger>
+            <TabsTrigger value="ai" className="w-full py-2.5 sm:w-auto sm:py-1.5">
+              AI/ML
+            </TabsTrigger>
           </TabsList>
           <TabsContent value="all" className="mt-8">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

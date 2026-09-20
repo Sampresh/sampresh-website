@@ -27,4 +27,49 @@
 body {
   background-color: black;
   color: white;
+  /* Site-wide pixel face (Geist Pixel Square, registered in app/layout.tsx) */
+  font-family: var(--font-geist-pixel-square), ui-monospace, monospace;
+}
+
+/*
+ * The nav is a floating rail on the right (tablet and up) and a floating bar at
+ * the bottom (phones). Both overlay the page, so keep content clear of them
+ * without padding <body> — that would shrink section backgrounds and show a seam.
+ */
+@media (min-width: 640px) {
+  /* `body` prefix raises specificity above Tailwind's px-* utilities, which are
+     emitted after this file's custom rules and would otherwise win. */
+  body .container {
+    padding-right: 6rem;
+  }
+}
+
+@media (max-width: 639px) {
+  body {
+    padding-bottom: 6.5rem;
+  }
+}
+
+/*
+ * The rail stacks one letter per line, so its height is driven by letter count.
+ * Scale type and spacing with viewport height (clamped) so it stays readable on
+ * a large display and still fits a short laptop without ever being clipped.
+ */
+@media (min-width: 640px) {
+  [data-nav-rail] {
+    gap: clamp(0.35rem, 1.1vh, 0.75rem);
+    padding-top: clamp(0.5rem, 1.6vh, 1rem);
+    padding-bottom: clamp(0.5rem, 1.6vh, 1rem);
+  }
+
+  [data-nav-rail] > a,
+  [data-nav-rail] > button {
+    padding-top: clamp(0.35rem, 1.2vh, 0.875rem);
+    padding-bottom: clamp(0.35rem, 1.2vh, 0.875rem);
+  }
+
+  [data-nav-rail] .nav-letters {
+    font-size: clamp(11px, 1.55vh, 15px);
+    line-height: 1.35;
+  }
 }
