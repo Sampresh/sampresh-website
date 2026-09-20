@@ -26,6 +26,8 @@ export type Skill = {
 export type ProfileInfo = {
   name: string
   title: string
+  /** Roles cycled through by the hero's particle text effect. */
+  roles: string[]
   email: string
   bio: string
   location: string
@@ -58,6 +60,59 @@ type PortfolioContextType = {
   profileInfo: ProfileInfo
   setProfileInfo: React.Dispatch<React.SetStateAction<ProfileInfo>>
   isLoading: boolean
+}
+
+const PROFILE_KEY = "portfolio-profile"
+const PROFILE_DEFAULTS_KEY = "portfolio-profile-defaults"
+
+/**
+ * Merge a saved profile over the current code defaults, one field at a time.
+ *
+ * The saved copy alone would shadow `defaultProfileInfo` forever, so editing a
+ * default in this file would never show up once anything had been persisted.
+ * We also store the defaults that were in force when the profile was saved: if
+ * a field's default has changed in code since then, the code wins for that
+ * field; otherwise the saved (admin-edited) value wins. With no snapshot at all
+ * we fall back to the code defaults.
+ */
+function reconcileProfile(
+  saved: Partial<ProfileInfo> | null,
+  savedAgainstDefaults: Partial<ProfileInfo> | null,
+): ProfileInfo {
+  // Indexed writes across a key union need a loosely typed working copy.
+  const result: Record<string, unknown> = { ...defaultProfileInfo }
+  if (!saved) return result as unknown as ProfileInfo
+
+  for (const key of Object.keys(defaultProfileInfo) as (keyof ProfileInfo)[]) {
+    const currentDefault = defaultProfileInfo[key]
+    const previousDefault = savedAgainstDefaults?.[key]
+
+    const defaultChangedInCode =
+      !savedAgainstDefaults || JSON.stringify(previousDefault) !== JSON.stringify(currentDefault)
+    if (defaultChangedInCode) continue
+
+    const savedValue = saved[key]
+    if (savedValue === undefined || savedValue === null) continue
+    if (typeof savedValue === "string" && savedValue.trim() === "") continue
+    if (Array.isArray(savedValue) && savedValue.length === 0) continue
+
+    if (
+      typeof savedValue === "object" &&
+      !Array.isArray(savedValue) &&
+      typeof currentDefault === "object" &&
+      currentDefault !== null &&
+      !Array.isArray(currentDefault)
+    ) {
+      result[key] = {
+        ...(currentDefault as object),
+        ...withoutBlanks(savedValue as object),
+      }
+    } else {
+      result[key] = savedValue
+    }
+  }
+
+  return result as unknown as ProfileInfo
 }
 
 const PortfolioContext = createContext<PortfolioContextType | undefined>(undefined)
@@ -113,11 +168,27 @@ const defaultProjects: Project[] = [
   },
 ]
 
+// Saved profiles can contain blank fields (e.g. a field cleared in the admin
+// form). Spreading those over the defaults wipes the name/title/bio and leaves
+// the hero showing only the profile image, so drop them before merging.
+function withoutBlanks<T extends object>(source: T | undefined): Partial<T> {
+  if (!source) return {}
+  return Object.fromEntries(
+    Object.entries(source).filter(([, value]) => {
+      if (value === undefined || value === null) return false
+      if (typeof value === "string") return value.trim() !== ""
+      if (Array.isArray(value)) return value.length > 0
+      return true
+    }),
+  ) as Partial<T>
+}
+
 const defaultProfileInfo: ProfileInfo = {
   name: "Sampresh Karki",
   title: "Computer Systems Engineering Graduate",
+  roles: ["Software Engineer", "Web Developer", "App Developer"],
   email: "sampreshkarki2@gmail.com",
-  bio: "I'm Sampresh, a Computer Systems Engineering graduate passionate about tech, AI, cybersecurity, and creative problem-solving. I build practical apps, design smart systems, and turn ideas into code — always learning, always building.",
+  bio: "Computer systems engineering graduate. I build web and mobile apps. Mostly full stack, occasionally security tooling. Available for freelance work.",
   location: "Nepal",
   contact: "9769404538",
   age: 24,
@@ -204,9 +275,15 @@ export const PortfolioProvider = ({ children }: { children: React.ReactNode }) =
         }
 
         // Load profile info
-        const savedProfileInfo = localStorage.getItem("portfolio-profile")
+        const savedProfileInfo = localStorage.getItem(PROFILE_KEY)
         if (savedProfileInfo) {
-          setProfileInfo(JSON.parse(savedProfileInfo))
+          const savedDefaults = localStorage.getItem(PROFILE_DEFAULTS_KEY)
+          setProfileInfo(
+            reconcileProfile(
+              JSON.parse(savedProfileInfo) as Partial<ProfileInfo>,
+              savedDefaults ? (JSON.parse(savedDefaults) as Partial<ProfileInfo>) : null,
+            ),
+          )
         }
 
         setIsDataLoaded(true)
@@ -242,7 +319,9 @@ export const PortfolioProvider = ({ children }: { children: React.ReactNode }) =
       try {
         localStorage.setItem("portfolio-projects", JSON.stringify(projects))
         localStorage.setItem("portfolio-blogposts", JSON.stringify(blogPosts))
-        localStorage.setItem("portfolio-profile", JSON.stringify(profileInfo))
+        localStorage.setItem(PROFILE_KEY, JSON.stringify(profileInfo))
+        // Remember the defaults in force, so a later edit to them can be detected.
+        localStorage.setItem(PROFILE_DEFAULTS_KEY, JSON.stringify(defaultProfileInfo))
       } catch (error) {
         console.error("Error saving data to localStorage:", error)
       }

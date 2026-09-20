@@ -10,14 +10,13 @@ import { Card, CardContent } from "@/components/ui/card"
 
 export default function CVPage() {
   const { profileInfo, isLoading } = usePortfolio()
-  const basePath = "/sampresh-website" // From next.config.mjs
 
   const handleDownloadCV = () => {
     // Create a link to download the CV
     const link = document.createElement("a")
-    // Ensure profileInfo.cv.path starts with a slash and basePath doesn't end with one for clean join
+    // Ensure profileInfo.cv.path starts with a slash
     const pdfPath = profileInfo.cv.path?.startsWith('/') ? profileInfo.cv.path : `/${profileInfo.cv.path || ""}`;
-    link.href = `${basePath}${pdfPath}`;
+    link.href = pdfPath;
     link.download = profileInfo.cv.fileName || "CV.pdf"
     document.body.appendChild(link)
     link.click()

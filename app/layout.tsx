@@ -1,19 +1,30 @@
 import type React from "react"
 import "./globals.css"
 import type { Metadata } from "next"
-import { Inter } from "next/font/google"
+import { GeistSans } from "geist/font/sans"
+import { GeistMono } from "geist/font/mono"
+import {
+  GeistPixelCircle,
+  GeistPixelGrid,
+  GeistPixelLine,
+  GeistPixelSquare,
+  GeistPixelTriangle,
+} from "geist/font/pixel"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Toaster } from "@/components/ui/toaster"
 import { PortfolioProvider } from "@/contexts/portfolio-context"
 
-// Optimize font loading with display swap
-const inter = Inter({
-  subsets: ["latin"],
-  display: "swap",
-  preload: true,
-  // Only load the weights we actually use
-  weight: ["400", "500", "600", "700"],
-})
+// Geist font variables: --font-geist-sans, --font-geist-mono and the five
+// --font-geist-pixel-* faces. Mapped to font-* utilities in tailwind.config.ts.
+const fontVariables = [
+  GeistSans.variable,
+  GeistMono.variable,
+  GeistPixelSquare.variable,
+  GeistPixelGrid.variable,
+  GeistPixelCircle.variable,
+  GeistPixelTriangle.variable,
+  GeistPixelLine.variable,
+].join(" ")
 
 export const metadata: Metadata = {
   title: "Sampresh Karki - Computer Systems Engineering Graduate",
@@ -72,7 +83,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" className={fontVariables} suppressHydrationWarning>
       <head>
         {/* Preload critical assets */}
         <link rel="preload" href="/images/profile.jpeg" as="image" />
@@ -80,7 +91,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
-      <body className={inter.className}>
+      <body className="font-pixel-square">
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
           <PortfolioProvider>
             {children}
